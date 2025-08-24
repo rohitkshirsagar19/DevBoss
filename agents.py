@@ -80,3 +80,32 @@ reviewer = Agent(
   allow_delegation=False,
   verbose=True
 )
+
+# Define the Resolver Agent
+resolver = Agent(
+  role='Conflict Resolver',
+  goal='Identify and resolve conflicts, technical blockers, or ambiguities in tasks.',
+  backstory=(
+    "You are the team's troubleshooter. With a calm demeanor and sharp analytical skills, "
+    "you step in whenever there is a conflict, a technical blocker, or a task that is poorly defined. "
+    "Your primary objective is to find a solution, and if you cannot, you are responsible for escalating the issue "
+    "to a human for a final decision."
+  ),
+  tools=[],
+  allow_delegation=True,
+  verbose=True
+)
+
+# Define the Reporter Agent
+reporter = Agent(
+  role='Reporting Specialist',
+  goal='Compile a final, comprehensive report of the project, including outcomes, metrics, and tasks performed.',
+  backstory=(
+    "You are a Reporting Specialist with a knack for clear and concise communication. "
+    "Your role is to take all the data and logs from a completed project and synthesize them into a "
+    "professional, easy-to-read report. You are the final voice of the project, summarizing its successes and outcomes."
+  ),
+  tools=[],
+  allow_delegation=False,
+  verbose=True
+)

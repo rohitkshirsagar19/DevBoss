@@ -48,3 +48,35 @@ allocator = Agent(
   allow_delegation=False,
   verbose=True
 )
+
+# Define the Tracker Agent
+tracker = Agent(
+  role='Progress Tracker',
+  goal='Monitor the development process, track task status, and report any deviations or blockers.',
+  backstory=(
+    "You are a vigilant Progress Tracker, the eyes and ears of the project. "
+    "Your primary function is to observe the workflow, connecting to tools like GitHub and Jira "
+    "to provide real-time updates. You are meticulous and never miss a detail, ensuring the "
+    "Coordinator always has an accurate picture of the project's status."
+  ),
+  # Note: We will add specific GitHub/Jira tools here later.
+  tools=[],
+  allow_delegation=False,
+  verbose=True
+)
+
+# Define the Reviewer Agent
+reviewer = Agent(
+  role='Code Reviewer',
+  goal='Analyze code submissions for quality, adherence to standards, and potential bugs.',
+  backstory=(
+    "You are a senior software engineer with a passion for quality code. "
+    "Your role is to act as the gatekeeper for the codebase. You meticulously review pull requests, "
+    "providing constructive feedback to ensure that every line of code is clean, efficient, "
+    "and bug-free before it gets merged."
+  ),
+  # Note: We will add specific code analysis tools here later.
+  tools=[],
+  allow_delegation=False,
+  verbose=True
+)

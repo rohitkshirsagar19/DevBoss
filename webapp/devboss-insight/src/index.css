@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* DevBoss Swarm Design System - Professional AI Dashboard */
+
+@layer base {
+  :root {
+    /* Core Dark Theme */
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+
+    /* Primary AI Blue */
+    --primary: 221 83% 53%;
+    --primary-foreground: 0 0% 98%;
+    --primary-glow: 221 83% 70%;
+
+    /* Success Green */
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 98%;
+    --success-glow: 142 76% 50%;
+
+    /* Warning Orange */
+    --warning: 32 95% 44%;
+    --warning-foreground: 0 0% 98%;
+    --warning-glow: 32 95% 60%;
+
+    /* Error Red */
+    --error: 0 84% 60%;
+    --error-foreground: 0 0% 98%;
+    --error-glow: 0 84% 75%;
+
+    /* Surface colors */
+    --secondary: 240 6% 10%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 240 5% 6%;
+    --muted-foreground: 240 5% 64.9%;
+
+    --accent: 240 4% 15.9%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 240 6% 20%;
+    --input: 240 6% 10%;
+    --ring: 221 83% 53%;
+
+    --radius: 0.75rem;
+
+    /* Agent Colors */
+    --coordinator: 221 83% 53%;
+    --allocator: 142 76% 36%;
+    --tracker: 262 83% 58%;
+    --reviewer: 32 95% 44%;
+    --resolver: 0 84% 60%;
+    --reporter: 190 95% 39%;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
+    --gradient-success: linear-gradient(135deg, hsl(var(--success)), hsl(var(--success-glow)));
+    --gradient-warning: linear-gradient(135deg, hsl(var(--warning)), hsl(var(--warning-glow)));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--coordinator)) 50%, hsl(var(--success)) 100%);
+
+    /* Effects */
+    --shadow-glow: 0 0 20px hsl(var(--primary) / 0.3);
+    --shadow-card: 0 4px 6px -1px hsl(0 0% 0% / 0.3), 0 2px 4px -1px hsl(0 0% 0% / 0.2);
+    --shadow-elevation: 0 10px 25px -3px hsl(0 0% 0% / 0.4), 0 4px 6px -2px hsl(0 0% 0% / 0.3);
+
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}

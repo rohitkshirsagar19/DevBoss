@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 import uvicorn
-
+from fastapi.middleware.cors import CORSMiddleware
 from crewai import Crew, Process
 from agents import coordinator, allocator, tracker, reviewer, resolver, reporter
 from tasks import ProjectTasks
@@ -15,6 +15,14 @@ app = FastAPI(
     title="DevBoss API",
     description="API for the multi-agent AI IT Manager.",
     version="0.1.0"
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:8080"],  # Allows your React app to connect
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods (GET, POST, etc.)
+    allow_headers=["*"],  # Allows all headers
 )
 
 @app.get("/")

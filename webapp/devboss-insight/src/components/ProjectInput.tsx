@@ -4,17 +4,21 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { Send, Sparkles, Code, Bug, Settings, FileText } from 'lucide-react';
+import { Send, Sparkles, Code, Bug, Settings, FileText, Loader2 } from 'lucide-react';
 
+// The props are updated to receive the loading state and submit handler
 interface ProjectInputProps {
   onSubmit: (project: { query: string; priority: string; type: string }) => void;
+  isLoading: boolean;
 }
 
-export const ProjectInput: React.FC<ProjectInputProps> = ({ onSubmit }) => {
+export const ProjectInput: React.FC<ProjectInputProps> = ({ onSubmit, isLoading }) => {
+  // Local state for the form inputs is kept
   const [query, setQuery] = useState('');
   const [priority, setPriority] = useState('medium');
   const [type, setType] = useState('bug-fix');
 
+  // The original arrays for task types and examples are kept
   const taskTypes = [
     { value: 'bug-fix', label: 'Bug Fix', icon: Bug },
     { value: 'feature', label: 'Feature Request', icon: Sparkles },
@@ -31,10 +35,11 @@ export const ProjectInput: React.FC<ProjectInputProps> = ({ onSubmit }) => {
     'Update API documentation for v2.0'
   ];
 
+  // The handleSubmit function is simplified. It now calls the function passed in via props.
   const handleSubmit = () => {
-    if (query.trim()) {
+    if (query.trim() && !isLoading) {
       onSubmit({ query: query.trim(), priority, type });
-      setQuery('');
+      setQuery(''); // Clear the input after submission
     }
   };
 
@@ -55,7 +60,7 @@ export const ProjectInput: React.FC<ProjectInputProps> = ({ onSubmit }) => {
         {/* Task Type Selection */}
         <div>
           <label className="text-sm font-medium mb-2 block">Task Type</label>
-          <Select value={type} onValueChange={setType}>
+          <Select value={type} onValueChange={setType} disabled={isLoading}>
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
@@ -75,23 +80,15 @@ export const ProjectInput: React.FC<ProjectInputProps> = ({ onSubmit }) => {
         {/* Priority Selection */}
         <div>
           <label className="text-sm font-medium mb-2 block">Priority</label>
-          <Select value={priority} onValueChange={setPriority}>
+          <Select value={priority} onValueChange={setPriority} disabled={isLoading}>
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="low">
-                <Badge variant="secondary">Low</Badge>
-              </SelectItem>
-              <SelectItem value="medium">
-                <Badge variant="outline" className="border-warning text-warning">Medium</Badge>
-              </SelectItem>
-              <SelectItem value="high">
-                <Badge variant="destructive">High</Badge>
-              </SelectItem>
-              <SelectItem value="critical">
-                <Badge variant="destructive" className="bg-error">Critical</Badge>
-              </SelectItem>
+              <SelectItem value="low"><Badge variant="secondary">Low</Badge></SelectItem>
+              <SelectItem value="medium"><Badge variant="outline" className="border-warning text-warning">Medium</Badge></SelectItem>
+              <SelectItem value="high"><Badge variant="destructive">High</Badge></SelectItem>
+              <SelectItem value="critical"><Badge variant="destructive" className="bg-error">Critical</Badge></SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -104,6 +101,7 @@ export const ProjectInput: React.FC<ProjectInputProps> = ({ onSubmit }) => {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="min-h-[100px] resize-none"
+            disabled={isLoading}
           />
         </div>
 
@@ -118,6 +116,7 @@ export const ProjectInput: React.FC<ProjectInputProps> = ({ onSubmit }) => {
                 size="sm"
                 onClick={() => handleExampleClick(example)}
                 className="text-xs h-auto py-1 px-2"
+                disabled={isLoading}
               >
                 {example}
               </Button>
@@ -128,11 +127,20 @@ export const ProjectInput: React.FC<ProjectInputProps> = ({ onSubmit }) => {
         {/* Submit Button */}
         <Button 
           onClick={handleSubmit}
-          disabled={!query.trim()}
+          disabled={!query.trim() || isLoading}
           className="w-full gap-2 bg-gradient-primary hover:opacity-90"
         >
-          <Send className="h-4 w-4" />
-          Deploy AI Agents
+          {isLoading ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Agents are Working...
+            </>
+          ) : (
+            <>
+              <Send className="h-4 w-4" />
+              Deploy AI Agents
+            </>
+          )}
         </Button>
 
         {/* Active Projects Counter */}

@@ -34,3 +34,17 @@ coordinator = Agent(
     allow_delegation=True,
     verbose=True
 )
+
+# Define the Allocator Agent
+allocator = Agent(
+  role='Task Allocator',
+  goal='Break down the project plan into granular, actionable sub-tasks and assign them appropriately.',
+  backstory=(
+    "You are a meticulous Task Allocator, known for your ability to see the bigger picture and the smallest details simultaneously. "
+    "You specialize in converting strategic plans into a perfectly structured list of tasks for the development team. "
+    "Your work ensures that everyone knows exactly what they need to do."
+  ),
+  tools=[],
+  allow_delegation=False,
+  verbose=True
+)

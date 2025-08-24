@@ -10,3 +10,5 @@ crewai-tools
 langchain-ollama 
 langchain-community 
 crewai
+torch
+sse-starlette

@@ -1,52 +1,32 @@
 # agents.py
+
 from crewai import Agent
-from crewai.tools import BaseTool
-from langchain_community.tools import DuckDuckGoSearchRun
+# IMPORT the new JiraCreateTicketTool
+from tools import JiraFetchIssuesTool, HumanInputTool, JiraCreateTicketTool
 from llm_config import llm
 
-# NEW IMPORTS for creating a tool schema
-from pydantic import BaseModel, Field
-from typing import Type
-
-# --- Tool Schema Definition ---
-# This defines the expected input for our tool
-class SearchToolArgs(BaseModel):
-    query: str = Field(description="The search query string.")
-
-# --- Tool Definition ---
-# We update the tool to use the new schema
-class DuckDuckGoSearchTool(BaseTool):
-    name: str = "Web Search"
-    description: str = "Search the internet for relevant information and articles."
-    args_schema: Type[BaseModel] = SearchToolArgs # Assign the schema here
-
-    def _run(self, query: str) -> str:
-        """Use the tool."""
-        search_tool = DuckDuckGoSearchRun()
-        return search_tool.run(query)
-
 # --- Agent Definitions ---
-# No changes needed here
+
 coordinator = Agent(
     role='Project Coordinator',
     goal='Oversee the project, ensuring tasks align with the main goal.',
     backstory=(
         "You are a seasoned Project Coordinator... You ensure all agents stay in harmony."
     ),
-    tools=[DuckDuckGoSearchTool()],
+    tools=[],
     allow_delegation=True,
     verbose=True,
     llm=llm
 )
 
-# (The rest of your agents remain the same, ensure they all have llm=llm)
+# Allocator agent is now equipped with the Jira Ticket Creator tool
 allocator = Agent(
   role='Task Allocator',
-  goal='Break down the project plan into granular, actionable sub-tasks and assign them appropriately.',
+  goal='Break down the project plan into granular, actionable sub-tasks and create them in Jira.', # Goal updated
   backstory=(
     "You are a meticulous Task Allocator... Your work ensures that everyone knows exactly what they need to do."
   ),
-  tools=[],
+  tools=[JiraCreateTicketTool()], # <-- ADDED the new Jira creation tool
   allow_delegation=False,
   verbose=True,
   llm=llm
@@ -58,7 +38,7 @@ tracker = Agent(
   backstory=(
     "You are a vigilant Progress Tracker... ensuring the Coordinator always has an accurate picture of the project's status."
   ),
-  tools=[],
+  tools=[JiraFetchIssuesTool()],
   allow_delegation=False,
   verbose=True,
   llm=llm
@@ -82,7 +62,7 @@ resolver = Agent(
   backstory=(
     "You are the team's troubleshooter... you are responsible for escalating the issue to a human for a final decision."
   ),
-  tools=[],
+  tools=[HumanInputTool()],
   allow_delegation=True,
   verbose=True,
   llm=llm

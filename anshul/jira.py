@@ -1,33 +1,43 @@
 import requests
 from requests.auth import HTTPBasicAuth
+from collections import defaultdict
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
-# Your Jira domain (e.g., your-domain.atlassian.net)
-jira_domain = "anshuladgurwar2004.atlassian.net"
 
-# Your email associated with Atlassian account
-email = "anshuladgurwar2004@gmail.com"
+# Now you can access the environment variable
+api_token = os.getenv("JIRA_API_TOKEN")
+jira_domain = os.getenv("JIRA_DOMAIN")
+email = os.getenv("EMAIL")
+url = os.getenv("URL")
 
-# Your API token (Jira API key)
-api_token = "ATATT3xFfGF0X-ApIxboiXQsPwC8SqGCG8f6s3cYMUqOTshloveXkX216O-UJwXHSmAgRDr85hvdWEfp51LxCC0Rd_rL1vM4yCKSyjWt1NoMu2ROSI4M7jPg8uHIoc814PdG_ArjE6RDY_RZNxOXmWLWIjq8dLMTbzLR7Khu4P9HJqIatgrFP3A=6482380A"
 
-# Jira API endpoint to fetch issues (example: search issues)
-url = f"https://anshuladgurwar2004.atlassian.net/rest/api/3/search"
-
-# Query parameters (adjust JQL as needed)
 query = {
     'jql': 'project=TEST',
-    'maxResults': 5  # number of issues to fetch
+    'maxResults': 50
 }
 
-# Make GET request to Jira API with basic auth using email and API token
 response = requests.get(url, params=query, auth=HTTPBasicAuth(email, api_token))
 
-# Check response status
 if response.status_code == 200:
     data = response.json()
-    print("Fetched issues:")
+    status_groups = defaultdict(list)
+
+    # Group issues by status name
     for issue in data.get('issues', []):
-        print(f"- {issue['key']}: {issue['fields']['summary']}")
+        status_name = issue['fields']['status']['name']
+        status_groups[status_name.upper()].append(issue)
+
+    # Define list of statuses to print in desired order
+    statuses_to_print = ['TO DO', 'IN PROGRESS', 'DONE']
+
+    # Print issues grouped by status, only for these statuses and in order
+    for status in statuses_to_print:
+        print(f"{status}:")
+        for issue in status_groups.get(status, []):
+            print(f"- {issue['key']}: {issue['fields']['summary']}")
+        print()  # Blank line for spacing
 else:
     print(f"Failed to fetch issues. Status code: {response.status_code}")
     print(response.text)

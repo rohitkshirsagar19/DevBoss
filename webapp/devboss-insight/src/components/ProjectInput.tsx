@@ -2,49 +2,30 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
-import { Send, Sparkles, Code, Bug, Settings, FileText, Loader2 } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Send, Sparkles, Paperclip, FileCheck, Loader2 } from 'lucide-react';
 
-// The props are updated to receive the loading state and submit handler
 interface ProjectInputProps {
-  onSubmit: (project: { query: string; priority: string; type: string }) => void;
+  onSubmit: (project: { query: string; file?: File }) => void;
   isLoading: boolean;
 }
 
 export const ProjectInput: React.FC<ProjectInputProps> = ({ onSubmit, isLoading }) => {
-  // Local state for the form inputs is kept
   const [query, setQuery] = useState('');
-  const [priority, setPriority] = useState('medium');
-  const [type, setType] = useState('bug-fix');
+  const [file, setFile] = useState<File | null>(null);
 
-  // The original arrays for task types and examples are kept
-  const taskTypes = [
-    { value: 'bug-fix', label: 'Bug Fix', icon: Bug },
-    { value: 'feature', label: 'Feature Request', icon: Sparkles },
-    { value: 'code-review', label: 'Code Review', icon: Code },
-    { value: 'optimization', label: 'Optimization', icon: Settings },
-    { value: 'documentation', label: 'Documentation', icon: FileText }
-  ];
-
-  const exampleQueries = [
-    'Fix login authentication timeout issue',
-    'Implement user role-based access control',
-    'Optimize database query performance',
-    'Review code quality for payment module',
-    'Update API documentation for v2.0'
-  ];
-
-  // The handleSubmit function is simplified. It now calls the function passed in via props.
-  const handleSubmit = () => {
-    if (query.trim() && !isLoading) {
-      onSubmit({ query: query.trim(), priority, type });
-      setQuery(''); // Clear the input after submission
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setFile(e.target.files[0]);
     }
   };
 
-  const handleExampleClick = (example: string) => {
-    setQuery(example);
+  const handleSubmit = () => {
+    if (query.trim() && !isLoading) {
+      onSubmit({ query: query.trim(), file: file || undefined });
+      setQuery('');
+      setFile(null);
+    }
   };
 
   return (
@@ -53,46 +34,10 @@ export const ProjectInput: React.FC<ProjectInputProps> = ({ onSubmit, isLoading 
         <CardTitle className="flex items-center gap-2">
           <Sparkles className="h-5 w-5 text-primary" />
           New Project Request
-        </CardTitle>
+        </CardTitle> {/* CORRECTED CLOSING TAG */}
       </CardHeader>
       
       <CardContent className="space-y-4">
-        {/* Task Type Selection */}
-        <div>
-          <label className="text-sm font-medium mb-2 block">Task Type</label>
-          <Select value={type} onValueChange={setType} disabled={isLoading}>
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {taskTypes.map((taskType) => (
-                <SelectItem key={taskType.value} value={taskType.value}>
-                  <div className="flex items-center gap-2">
-                    <taskType.icon className="h-4 w-4" />
-                    {taskType.label}
-                  </div>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Priority Selection */}
-        <div>
-          <label className="text-sm font-medium mb-2 block">Priority</label>
-          <Select value={priority} onValueChange={setPriority} disabled={isLoading}>
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="low"><Badge variant="secondary">Low</Badge></SelectItem>
-              <SelectItem value="medium"><Badge variant="outline" className="border-warning text-warning">Medium</Badge></SelectItem>
-              <SelectItem value="high"><Badge variant="destructive">High</Badge></SelectItem>
-              <SelectItem value="critical"><Badge variant="destructive" className="bg-error">Critical</Badge></SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
         {/* Query Input */}
         <div>
           <label className="text-sm font-medium mb-2 block">Project Description</label>
@@ -105,23 +50,23 @@ export const ProjectInput: React.FC<ProjectInputProps> = ({ onSubmit, isLoading 
           />
         </div>
 
-        {/* Example Queries */}
+        {/* File Upload Section */}
         <div>
-          <p className="text-sm font-medium mb-2">Quick Examples:</p>
-          <div className="flex flex-wrap gap-2">
-            {exampleQueries.slice(0, 3).map((example, index) => (
-              <Button
-                key={index}
-                variant="outline"
-                size="sm"
-                onClick={() => handleExampleClick(example)}
-                className="text-xs h-auto py-1 px-2"
-                disabled={isLoading}
-              >
-                {example}
-              </Button>
-            ))}
-          </div>
+          <label htmlFor="file-upload" className="w-full">
+            <Button asChild variant="outline" disabled={isLoading} className="w-full cursor-pointer">
+              <div>
+                <Paperclip className="h-4 w-4 mr-2" />
+                Attach Diagram (PDF)
+              </div>
+            </Button>
+            <Input id="file-upload" type="file" accept=".pdf" onChange={handleFileChange} className="hidden" />
+          </label>
+          {file && (
+            <div className="mt-2 text-sm text-success flex items-center gap-2">
+              <FileCheck className="h-4 w-4" />
+              <span>{file.name} attached</span>
+            </div>
+          )}
         </div>
 
         {/* Submit Button */}
@@ -142,13 +87,7 @@ export const ProjectInput: React.FC<ProjectInputProps> = ({ onSubmit, isLoading 
             </>
           )}
         </Button>
-
-        {/* Active Projects Counter */}
-        <div className="text-center pt-2 border-t">
-          <p className="text-sm text-muted-foreground">
-            <span className="font-semibold text-primary">8</span> active projects being managed
-          </p>
-        </div>
+        
       </CardContent>
     </Card>
   );

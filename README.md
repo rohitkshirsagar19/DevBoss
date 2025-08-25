@@ -1,6 +1,9 @@
 # DevBoss 
 
-[Watch the demo video](video/demo.mp4)
+![](./img/img1.png)
+![](./img/img2.png) 
+
+
 
 
 DevBoss is an autonomous, multi-agent AI system designed to act as an AI IT Manager. It intelligently handles the entire project lifecycle—from planning and Jira ticket creation to progress tracking and human-in-the-loop escalation—allowing your development team to focus on what they do best: building.
